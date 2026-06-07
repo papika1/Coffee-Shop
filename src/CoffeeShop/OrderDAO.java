@@ -12,14 +12,16 @@ public class OrderDAO {
 	public void saveOrder(Order order) throws SQLException {
 
         String insertOrderSQL = "INSERT INTO orders (order_time, total_amount) VALUES (?, ?)";
-        String insertItemSQL = "INSERT INTO order_items (order_id, coffee_type, quantity, unit_price, price) VALUES (?, ?, ?, ?, ?)";
+        String insertItemSQL = "INSERT INTO order_items (order_id, coffee_type, quantity,"
+        		+ " unit_price, price) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection()) {
 
             conn.setAutoCommit(false);
 
             try (
-                PreparedStatement orderStmt = conn.prepareStatement(insertOrderSQL, Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement orderStmt = conn.prepareStatement(insertOrderSQL, 
+                		Statement.RETURN_GENERATED_KEYS);
                 PreparedStatement itemStmt = conn.prepareStatement(insertItemSQL)
             ) {
 
@@ -82,7 +84,8 @@ public class OrderDAO {
     }
 
     public double getTodayRevenue() {
-        String sql = "SELECT COALESCE(SUM(total_amount), 0) FROM orders WHERE DATE(order_time) = CURDATE()";
+        String sql = "SELECT COALESCE(SUM(total_amount), 0) FROM orders WHERE DATE(order_time) = "
+        		+ "CURDATE()";
 
         try (
             Connection conn = DBConnection.getConnection();
